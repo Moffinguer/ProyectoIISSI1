@@ -1,0 +1,52 @@
+Venta y gestión de reparos de puertas. ASSA-Abloid Es la empresa.
+Puertas de Lona, fábricas, angares (80*20 ancho)
+
+Tienen una bdd para centralizar los equipos (puertas, intervenciones) y poder acceder desde
+cualquier punto del mundo, acceder y trabajar con ellos.
+
+Clientes: 
+	Puertos de carga, plataformas, ¿abrigos? para proteger el camión al punto de carga, para salvaguardar las piezas
+	Se usan retenedores, para mantener los camiones y puertas fijas.
+	Equipos(materiales) únicos para cada instalación. 
+	Pais, direcciones, códigos únicos para centros (por lo general con direcciones de la ubicación de las plantas)
+	Cada empresa, no particulares, CIF único para puntos de intervención y pago
+	Varias fábricas por cada CIF, ya que va por cada empresa
+	Tlf Contacto
+	Email de contacto
+	Codigo de Facturación	
+	Número de puertas compradas
+Puertas:
+	Las puertas pueden ser (batiente para las casas, rápidas(velocidades, sectorizar, salas limpias, exclusas), seccionales(forma de doblarse), megalor), colores, dimensiones, muelles para levantar las puertas, motores, ¿célula?
+	Las puertas se manejas desde paneles o son automáticos.
+		
+
+	Fotocélula: Elemento de seguridad que escanea el paso de algo, y se bloquea en caso de haber algo en medio.
+	Bandas de seguridad para marcar 
+	Lazos magnéticos para detectar metales
+	Radares de movimiento, presencia, masas
+	Dintel: Extremo superior que deja traspasar la luz.
+	
+Trabajadores:
+	CEO
+	Accionistas
+	Directores Generales por pais
+	Fábricas por pais, del conglomerado
+	Técnicos de ¿Popeta?
+	
+	Montadores
+	Peones
+
+Aerolíneas, Supermercados, Tiendas variadas, Metalúrgia, Automovil, Retail (Tienda al por mayor)
+Plazos: Tiempo de Entrega, plazos de ejecución.
+Si no se cumplen los plazos, se penaliza a la empresa(pero depende del contrato) [PENALIZACIÓN EN EL CONTRATO]
+
+Los proveedores no pertenecen a la misma empresa. Nombre, tipo de pieza, material del que está hecho, precios, contactos generales
+Existen puertas personalizables, y un catálogo
+
+Las garantías dependen de cada tipo de puerta, 1 año mínimo (Importante). Por golpes. Historiales
+
+Datos usuario y puertas modificables:
+	Código Modificable de la puerta (muy dificil) solución alternativa
+	Telefono, email.
+	Modificar características de las puertas en el mantenimiento.
+	

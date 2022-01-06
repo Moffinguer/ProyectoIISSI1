@@ -1,0 +1,31 @@
+ENTREVISTA PROYECTO ISSI 
+
+1. Empresa Sueca surgida de la fusión de otras dos. Se dedica a comprar empresas más pequeñas y afiliarlas a esta. Vende y prepara puertas, accesos a edificios.
+
+2. Todos los datos que necesita almacenar la empresa. Se quiere centralizar y tener localizadas todas las puertas, intervenciones (clientes), en un mismo lugar, para que desde cualquier punto del planeta pudiera acceder a esto.
+Puntos de ventas, de acceso, camiones de transporte (todo esto lo comercializa la empresa). Facilitar el acceso de camiones a edificios. Se quiere almacenar: Número de serie de cada puerta (según tamaño (medidas), estructura (hasta 4), color, tipo de rueda, tarjeta, etc), tipos de puerta (rápidas, megadoor, seccionales,,,, interior, exterior), futuras reparaciones/mantenimiento, clientes ->nombre de la empresa, localización/dirección, CIF (para empresa, y según la sucursal distintos identificadores), historial de mantenimiento o reparaciones/modificaciones de los productos* (para posibles mejoras en el producto). 
+
+3. Accionistas, Presidente CEO, director general de unidades de venta, fábricas (de la propia empresa), técnicos de postventa (reparaciones), jefe de obra, montadores de puertas, administración(facturación, mantenimiento), coordinadores/planners.
+
+4. Empresas de varios sectores (metalúrgico, automóvil, retail (lidl, mercadona, decathlon, etc), agroalimentarios, aviación)
+
+5. Info clientes: CIF, nombre de la empresa, localización, dirección de facturación, teléfono/email -> de empresa y/o personas de contacto según la funcionalidad/necesidad, presupuesto,
+
+6. Tiempo de entrega: estipulado por la empresa. Se gestiona la entrega por plazos.  
+
+7. Proveedores: para chapa de acero, panel sandwich, metal para vía/ruedas, material de motor, etc. Información sobre estos: localización, contactos, precio.
+
+8. Hay catálogo de puertas. Son estándar pero el cliente puede añadir un nombre (logo), fotografías, etc.
+
+9. Generalmente 1 año de garantía, pero puede negociarse con el cliente. Se puede anular si se determina que el fallo de la puerta no lo cubre la garantía (golpes, daños causados).
+
+
+Glosarío: 
+
+Radar: detecta el movimiento, pueden detectar presencia o movimiento y además este puede ser específico ( por ejemplo solo detectar una masa en concreto ).
+
+dintel: parte de arriba del marco de una puerta.
+
+panel sandwich: formado de una chapa de acero por ambos lados (3mm de espesor), dentro se encuentra proliuretano proyectado (se endurece y queda prensado, como espuma, dando rigidez).De 4cm en total.
+
+* no fácil de implementar en su base de datos.

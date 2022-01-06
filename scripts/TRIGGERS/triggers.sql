@@ -1,0 +1,183 @@
+USE ASSAABLOY;
+DELIMITER //
+CREATE OR REPLACE TRIGGER TUMATERIAL
+BEFORE UPDATE ON MATERIALES
+FOR EACH ROW
+	BEGIN
+		IF !(NEW.TAMANIO = OLD.TAMANIO) OR !(NEW.TIPO = OLD.TIPO) THEN
+			SIGNAL SQLSTATE '50007' SET MESSAGE_TEXT = 'No puede modificar el tamaño o el tipo establecido';
+		END IF;
+	END //
+DELIMITER ;
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER TUMATERIALES
+BEFORE UPDATE ON MATERIALES
+FOR EACH ROW
+	BEGIN
+		DECLARE CAPACIDADALMACEN DOUBLE(7,3);
+		DECLARE ALMACEN INT;
+		SET CAPACIDADALMACEN = (SELECT almacenes.ESPACIOTOTAL FROM almacenes,materialesalmacenes, materiales
+											WHERE materiales.idMaterial= materialesalmacenes.idMaterial AND almacenes.IDALMACEN = materialesalmacenes.IDALMACEN
+											AND materiales.IDMATERIAL=NEW.idmaterial);
+		SET ALMACEN = (SELECT almacenes.IDALMACEN FROM almacenes, materialesalmacenes, materiales WHERE materialesalmacenes.IDALMACEN=almacenes.idAlmacen
+			AND materialesalmacenes.idMATERIAL = materiales.IDMATERIAL AND materiales.IDMATERIAL=NEW.idmaterial);
+		
+		IF CAPACIDADALMACEN - STOCKTOTAL(ALMACEN) + OLD.STOCK*OLD.TAMANIO - NEW.tamanio*NEW.stock < 0 THEN
+			SIGNAL SQLSTATE '50017' SET MESSAGE_TEXT = 'No hay más espacio en este almacén';
+		END IF;
+	END //
+DELIMITER ;
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER TIMATERIALES
+BEFORE INSERT ON MATERIALES
+FOR EACH ROW
+	BEGIN
+		DECLARE CAPACIDADALMACEN DOUBLE(7,3);
+		DECLARE ALMACEN INT;
+		SET CAPACIDADALMACEN = (SELECT almacenes.ESPACIOTOTAL FROM almacenes,materialesalmacenes, materiales
+											WHERE materiales.idMaterial= materialesalmacenes.idMaterial AND almacenes.IDALMACEN = materialesalmacenes.IDALMACEN
+											AND materiales.IDMATERIAL=NEW.idmaterial);
+		SET ALMACEN = (SELECT almacenes.IDALMACEN FROM almacenes, materialesalmacenes, materiales WHERE materialesalmacenes.IDALMACEN=almacenes.idAlmacen
+			AND materialesalmacenes.idMATERIAL = materiales.IDMATERIAL AND materiales.IDMATERIAL=NEW.idmaterial);
+		
+		IF CAPACIDADALMACEN - STOCKTOTAL(ALMACEN) - NEW.tamanio*NEW.stock < 0 THEN
+			SIGNAL SQLSTATE '50017' SET MESSAGE_TEXT = 'No hay más espacio en este almacén';
+		END IF;
+	END //
+DELIMITER ;
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER TUALMACENES
+BEFORE UPDATE ON ALMACENES
+FOR EACH ROW
+	BEGIN
+		IF NEW.ESPACIOTOTAL - STOCKTOTAL(NEW.IDALMACEN) < 0 THEN
+			SIGNAL SQLSTATE '50017' SET MESSAGE_TEXT = 'No se puede reducir más el espacio del almacén';
+		END IF;
+	END //
+DELIMITER ;
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER TIALMACENES
+BEFORE INSERT ON ALMACENES
+FOR EACH ROW
+	BEGIN
+		IF NEW.ESPACIOTOTAL - STOCKTOTAL(NEW.IDALMACEN) < 0 THEN
+			SIGNAL SQLSTATE '50017' SET MESSAGE_TEXT = 'No se puede reducir más el espacio del almacén';
+		END IF;
+	END //
+DELIMITER ;
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER TUPUERTAS
+BEFORE UPDATE ON PUERTAS
+FOR EACH ROW
+	BEGIN
+		IF !(NEW.PUERTA = OLD.PUERTA) OR
+				!(NEW.IDCLIENTE = OLD.IDCLIENTE) OR
+				!(NEW.FECHAADQUISICION = OLD.FECHAADQUISICION) OR !(NEW.DIMENSIONA = OLD.DIMENSIONA) OR
+				!(NEW.ESMOTORIZADA = OLD.ESMOTORIZADA) THEN
+					SIGNAL SQLSTATE '50008' SET MESSAGE_TEXT = 'Solo puede modificarse el color';
+		END IF;
+	END //
+DELIMITER ;
+DELIMITER //
+CREATE OR REPLACE TRIGGER NOMODIFICARCLIENTE 
+BEFORE UPDATE ON clientes FOR EACH ROW
+BEGIN
+	IF (new.CIF != OLD.CIF OR 	new.NOMBREEMPRESA != old.NOMBREEMPRESA OR NEW.DIRECCION != OLD.DIRECCION) THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No es posible modificar el CIF, la dirección o el nombre de un cliente.';
+	END IF;
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER CobroDeFactura
+BEFORE UPDATE ON facturas
+FOR EACH ROW
+BEGIN
+	DECLARE fecha DATE;
+	DECLARE cobro INT;
+	SET fecha = (SELECT FECHAANUL FROM garantias 
+					JOIN puertas                 ON(garantias.IDPUERTA=puertas.IDPUERTA)
+					JOIN puertasempleados        ON(puertas.IDPUERTA=puertasempleados.IDPUERTA)
+					JOIN empleados               ON(puertasempleados.IDEMPLEADO=empleados.IDEMPLEADO)
+					JOIN mantenimientosempleados ON(empleados.IDEMPLEADO=mantenimientosempleados.IDEMPLEADO)
+					JOIN mantenimientos          ON(mantenimientosempleados.IDMANTENIMIENTO=mantenimientos.IDMANTENIMIENTO)
+					JOIN facturas                ON(mantenimientos.IDMANTENIMIENTO=facturas.IDMANTENIMIENTO)
+					WHERE IDFACTURA=OLD.IDFACTURA);
+																
+	SET cobro = NEW.COBRO;
+	
+	if (DATEDIFF(fecha,NOW()) <= 0 AND cobro!=0) then
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT =
+		'No se le puede cobrar al cliente porque tiene la puerta en garantía';
+	END if;
+END //
+DELIMITER ; 
+/*Rocío Alberca - RF9*/
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER tNoMofidicarDireccionNombre 
+BEFORE UPDATE ON proveedores FOR EACH ROW
+BEGIN 
+   IF (new.direccion!=old.direccion OR new.nombre!=old.nombre) then 
+	SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT =
+	'No se puede modificar ni la dirección ni el nombre de un proveedor';
+	END IF;
+END //
+DELIMITER ;
+	DELIMITER //
+CREATE OR REPLACE TRIGGER TMANTENIMIENTOS
+BEFORE UPDATE ON MANTENIMIENTOs
+FOR EACH ROW
+BEGIN
+	IF !(NEW.FECHAINI = OLD.FECHAINI) THEN
+		SIGNAL SQLSTATE '50012' SET MESSAGE_TEXT = 'No se puede modificar la fecha de inicio del mantenimiento, solo la final';
+	END IF;
+END //
+delimiter ;
+DELIMITER //
+CREATE OR REPLACE TRIGGER TEMPLEADOS
+BEFORE UPDATE ON EMPLEADOS
+FOR EACH ROW
+BEGIN
+	IF !(NEW.EMPLEADO = OLD.EMPLEADO) THEN
+		SIGNAL SQLSTATE '50013' SET MESSAGE_TEXT = 'No puede cambiar el rango';
+	END IF;
+	IF !(NEW.APELLIDOS = OLD.APELLIDOS) THEN
+		SIGNAL SQLSTATE '50014' SET MESSAGE_TEXT = 'No puede modificar los apellidos de nadie';
+	END IF;
+	IF !(NEW.NOMBRE = OLD.NOMBRE) THEN
+		SIGNAL SQLSTATE '50015' SET MESSAGE_TEXT = 'No puede modificar el nombre';
+	END IF;
+END //
+delimiter ;
+DELIMITER //
+CREATE OR REPLACE TRIGGER TPUERTAADDGARANTIA
+AFTER INSERT ON puertas
+FOR EACH ROW
+BEGIN
+	INSERT INTO garantias (IDPUERTA) VALUES (NEW.IDPUERTA);
+END //
+DELIMITER ;
+DELIMITER //
+CREATE OR REPLACE TRIGGER TMANTENIMIENTOFACTURA
+AFTER INSERT ON mantenimientos
+FOR EACH ROW
+BEGIN
+	INSERT INTO facturas(IDMANTENIMIENTO) VALUES (NEW.IDMANTENIMIENTO);
+END //
+DELIMITER ;
+DELIMITER //
+CREATE OR REPLACE TRIGGER TUGARANTIA
+BEFORE UPDATE ON GARANTIAS
+FOR EACH ROW
+BEGIN
+	IF NOT ISNULL(NEW.MOTIVOANUL) THEN
+		SET NEW.FECHAANUL = NOW();
+	END IF;
+END //
+DELIMITER ;
