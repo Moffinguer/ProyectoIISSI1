@@ -27,4 +27,4 @@ TAREAS COMPLETADAS:
 -   [x] Tercer Entregable
 
 
-# En caso de querer acceder al repositorio con los datos, use el siguiente [enlace](https://github.eii.us.es/fermatgom/ALBERCA_BERMEJO_GALLARDO_LOPEZ_MATEOS.git). 
+# TODA MODIFICACIÓN DE ESTE ARCHIVO DEBE DE NOTIFICARSE A LOS INTEGRANTES Y CREADORES DEL PROYECTO ORIGINAL, SIN EXCEPCIÓN.
